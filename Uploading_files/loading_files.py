@@ -1,3 +1,4 @@
+from kafka_models.kafka_producer import Producer
 import pathlib
 import datetime
 import json
@@ -11,6 +12,8 @@ class loading_files:
         self.path = pathlib.Path(r"C:\Users\oriel\podcasts")
         self.data_dic = {}
         self.data_in_json = None
+        self.producer_metadata = Producer()
+
 
 
 
@@ -29,7 +32,11 @@ class loading_files:
                 self.data_dic["metadata"] = metadata_dic
 
                 self.data_in_json = json.dumps(self.data_dic,indent=4)
+                self.producer_metadata.publish_message(message=self.data_in_json,topic='path_and_metadata')
+
+
                 print(self.data_in_json)
+        self.producer_metadata.get_producer_config().flush()
 
 
 
@@ -38,7 +45,4 @@ class loading_files:
 
 
 
-if __name__ == '__main__':
-    run = loading_files()
 
-    run.loading_file()
