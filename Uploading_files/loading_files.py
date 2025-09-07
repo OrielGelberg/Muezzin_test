@@ -35,7 +35,7 @@ class loading_files:
                 self.producer_metadata.publish_message(message=self.data_in_json,topic='path_and_metadata')
 
 
-                print(self.data_in_json)
+                # print(self.data_in_json)
         self.producer_metadata.get_producer_config().flush()
 
 
