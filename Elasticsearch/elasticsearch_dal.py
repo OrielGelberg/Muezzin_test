@@ -8,6 +8,7 @@ class ElasticsearchDal:
         # self.es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
         self.es = Elasticsearch('http://localhost:9200')
 
+
         if self.es.ping():
             print("Connected to Elasticsearch")
         else:
@@ -27,6 +28,11 @@ class ElasticsearchDal:
         }
 
         self.es.indices.create(index="my_index", body=index_mapping, ignore=400)
+
+
+
+        response = self.es.index(index="my_index", document=single_json_document)
+
 
 
 
