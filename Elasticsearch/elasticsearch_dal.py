@@ -14,6 +14,9 @@ class ElasticsearchDal:
         else:
             print("Could not connect")
 
+    def Audio_search(self,index_name):
+
+        # index_name = "Audio_search"
         index_mapping = {
             "mappings": {
                 "properties": {
@@ -26,12 +29,17 @@ class ElasticsearchDal:
                 }
             }
         }
+        if self.es.indices.exists(index=index_name):
+            self.es.indices.delete(index=index_name)
+        print(f"Deleted index: {index_name}")
 
-        self.es.indices.create(index="my_index", body=index_mapping, ignore=400)
+        self.es.indices.create(index=index_name, body=index_mapping, ignore=400)
+
+    def input_to_index(self, single_dict_document, index):
+        response = self.es.index(index=index, document=single_dict_document)
+        print("Inserted document:", response)
 
 
-
-        response = self.es.index(index="my_index", document=single_json_document)
 
 
 
