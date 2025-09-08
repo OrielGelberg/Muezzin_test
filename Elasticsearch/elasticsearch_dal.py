@@ -1,3 +1,4 @@
+from logger import logger
 from elasticsearch import Elasticsearch
 from datetime import datetime
 
@@ -15,7 +16,9 @@ class ElasticsearchDal:
             print("Could not connect")
 
     def Audio_search(self,index_name):
-
+        if self.es.indices.exists(index=index_name):
+            self.es.indices.delete(index=index_name)
+        print(f"Deleted index: {index_name}")
         # index_name = "Audio_search"
         index_mapping = {
             "mappings": {
@@ -29,9 +32,9 @@ class ElasticsearchDal:
                 }
             }
         }
-        if self.es.indices.exists(index=index_name):
-            self.es.indices.delete(index=index_name)
-        print(f"Deleted index: {index_name}")
+        # if self.es.indices.exists(index=index_name):
+        #     self.es.indices.delete(index=index_name)
+        # print(f"Deleted index: {index_name}")
 
         self.es.indices.create(index=index_name, body=index_mapping, ignore=400)
 

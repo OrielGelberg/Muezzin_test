@@ -1,3 +1,4 @@
+from logger import logger
 from dotenv import find_dotenv, load_dotenv
 import os
 from kafka import KafkaConsumer

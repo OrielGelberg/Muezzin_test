@@ -1,3 +1,4 @@
+from logger import logger
 from pymongo import MongoClient
 import gridfs
 from dotenv import find_dotenv, load_dotenv
@@ -37,11 +38,7 @@ class MongoDal:
         with open(path, "rb") as f:
             fs.put(f, _id=unique_id)
 
-        # for path in file_paths:
-        #     unique_id = os.path.splitext(os.path.basename(path))[0]  # example1, example2, ...
-        #     with open(path, "rb") as f:
-        #         fs.put(f, _id=unique_id)
-        # print(f"Uploaded {path} with _id={file_data =fs.get("example1").read()(שליפה)
+
 
 
 

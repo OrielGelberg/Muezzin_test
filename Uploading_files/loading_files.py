@@ -1,3 +1,4 @@
+from logger import logger
 from kafka_models.kafka_producer import Producer
 import pathlib
 import datetime

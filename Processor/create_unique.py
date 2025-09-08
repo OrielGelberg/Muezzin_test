@@ -1,3 +1,4 @@
+from logger import logger
 import hashlib
 
 
@@ -18,8 +19,3 @@ class Hasher_id:
 
 
 
-# Example usage:
-# hasher = Hasher_id()
-#
-# file_hash = hasher.generate_file_hash(r"C:\\Users\\oriel\\podcasts\\download (8).wav", 'sha256')
-# print(file_hash)

@@ -5,6 +5,6 @@ run = loading_files()
 
 
 if __name__ == '__main__':
-    while True:
-        run.loading_file()
-        time.sleep(10)
+
+     run.loading_file()
+     time.sleep(100000)
