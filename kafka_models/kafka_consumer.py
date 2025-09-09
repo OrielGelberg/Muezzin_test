@@ -36,9 +36,10 @@ class Consumer:
         consumer = KafkaConsumer(*topic,
                                  group_id='my-group',
                                  value_deserializer=lambda m: json.loads(m.decode('utf-8')),
-                                 bootstrap_servers=[self.URI])
+                                 bootstrap_servers=[self.URI],
+                                 consumer_timeout_ms = 9000)
 
-        # consumer_timeout_ms = 10000 optional
+
 
         return consumer
 

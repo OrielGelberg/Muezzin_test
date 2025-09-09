@@ -38,22 +38,24 @@ class processor:
             path_and_metadata = self.cleaner.string_to_dict(message["value"])
             unique_id = self.hasher.generate_file_hash(path_and_metadata["path"])
             self.logger.info("level1")
-            path_and_metadata["metadata"]["unique_id"] = unique_id
+            # path_and_metadata["metadata"]["unique_id"] = unique_id
             path_and_metadata["metadata"]["STT_file"] = "Null"
 
-            path_and_metadata["metadata"]["STT_file"] = self.stt.audio_from_path(path_and_metadata["path"])
-
+            # path_and_metadata["metadata"]["STT_file"] = self.stt.audio_from_path(path_and_metadata["path"])
 
             self.es.input_to_index(path_and_metadata["metadata"],self.index_name,unique_id)
             self.logger.info("level4")
 
-            self.list_path.append(path_and_metadata["path"])
-            self.list_id.append(unique_id)
-
             self.mongo.insert_audio(path_and_metadata["path"], unique_id)
+            print(unique_id)
 
 
-        # self.list_id = self.es.search_id(self.index_name)
+        print("start line 54")
+        self.logger.info("input to list_dict_audio")
+        list_dict_audio = self.mongo.get_all_audio_files()
+        self.logger.info("input to list_dict_audio was succesful.")
+        for audio_file in list_dict_audio:
+            self.es.update_audio_search_index(audio_file[self.index_name],audio_file['_id'],audio_file['binary_data'])
 
 
 
