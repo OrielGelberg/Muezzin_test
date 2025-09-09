@@ -1,5 +1,7 @@
-from logger import logger
+from logger.logger import Logger
 from kafka_models.kafka_producer import Producer
+from dotenv import find_dotenv, load_dotenv
+import os
 import pathlib
 import datetime
 import json
@@ -10,10 +12,12 @@ import json
 
 class loading_files:
     def __init__(self):
-        self.path = pathlib.Path(r"C:\Users\oriel\podcasts")
+        load_dotenv(find_dotenv())
+        self.path = pathlib.Path(os.getenv('PODCASTS_PATH'))
         self.data_dic = {}
         self.data_in_json = None
         self.producer_metadata = Producer()
+        self.logger = Logger.get_logger()
 
 
 
@@ -26,18 +30,26 @@ class loading_files:
                     "title": str(item.name),
                     "Size": str(file_stats.st_size),
                     "Created": str(datetime.datetime.fromtimestamp(file_stats.st_ctime)),
-                    "inode": str(file_stats.st_ino),
-                    "dev": str(file_stats.st_dev),
+                    # "inode": str(file_stats.st_ino),
+                    # "dev": str(file_stats.st_dev),
                 }
                 self.data_dic["path"] = str(item)
                 self.data_dic["metadata"] = metadata_dic
 
                 self.data_in_json = json.dumps(self.data_dic,indent=4)
-                self.producer_metadata.publish_message(message=self.data_in_json,topic='path_and_metadata')
+                self.logger.info("The file was successfully loaded.")
+                try:
+                    self.producer_metadata.publish_message(message=self.data_in_json,topic='path_and_metadata')
+                    self.logger.info("The file was successfully published.")
+                except Exception as e:
+                    self.logger.error("An error occured while publishing the file.",e)
 
 
-                # print(self.data_in_json)
-        self.producer_metadata.get_producer_config().flush()
+        try:
+            self.producer_metadata.get_producer_config().flush()
+            self.logger.debug("The all files was successfully published.")
+        except Exception as e:
+            self.logger.error("An error occured while getting the producer config.",e)
 
 
 

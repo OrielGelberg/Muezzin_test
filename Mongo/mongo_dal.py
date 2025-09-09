@@ -1,4 +1,4 @@
-from logger import logger
+from logger.logger import Logger
 from pymongo import MongoClient
 import gridfs
 from dotenv import find_dotenv, load_dotenv
@@ -15,28 +15,40 @@ class MongoDal:
         self.MongodbDB = os.getenv('LOCAL_MONGODB_DB')
         self.MongodbAudioCollection = os.getenv('LOCAL_MONGODB_COLLECTION_Audio')
         self.ConnectString = os.getenv('LOCAL_MONGODB_CONNECT_STRING')
+        self.logger = Logger.get_logger()
 
         self.connection = None
 
     def open_connection(self):
-        if self.connection is None:
-            self.connection = MongoClient(self.ConnectString)
-        return self.connection
+        try:
+            if self.connection is None:
+                self.connection = MongoClient(self.ConnectString)
+                self.logger.debug('Connection established')
+            return self.connection
+        except Exception as e:
+            self.logger.error("The connection was not successfully opened.",e)
 
     def close_connection(self):
-        if self.connection:
-            self.connection.close()
+        try:
+            if self.connection:
+                self.connection.close()
+                self.logger.debug('Connection closed')
+        except Exception as e:
+            self.logger.error("The connection was not successfully closed.",e)
 
 
 
     def insert_audio(self, path,unique_id):
 
         connection = self.open_connection()
-
-        db = connection[self.MongodbDB]
-        fs = gridfs.GridFS(db)
-        with open(path, "rb") as f:
-            fs.put(f, _id=unique_id)
+        try:
+            db = connection[self.MongodbDB]
+            fs = gridfs.GridFS(db)
+            with open(path, "rb") as f:
+                fs.put(f, _id=unique_id)
+            self.logger.debug('Audio inserted successfully to mongodb')
+        except Exception as e:
+            self.logger.error("The audio_file was not successfully uploaded to mongodb.",e)
 
 
 

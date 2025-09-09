@@ -1,4 +1,4 @@
-from logger import logger
+from logger.logger import Logger
 from dotenv import find_dotenv, load_dotenv
 import os
 from kafka import KafkaConsumer
@@ -11,6 +11,8 @@ class Consumer:
         self.Host = os.getenv('KAFKA_HOST')
         self.Port = os.getenv('KAFKA_PORT')
         self.URI = os.getenv('KAFKA_CONNECT_STRING')
+        self.logger = Logger.get_logger()
+
 
     @staticmethod
     def convert_to_messages(events):
