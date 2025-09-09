@@ -52,5 +52,29 @@ class MongoDal:
 
 
 
+    def get_all_audio_files(self):
+        connection = self.open_connection()
+        try:
+            db = connection[self.MongodbDB]
+            fs = gridfs.GridFS(db)
+
+            audio_files_data = []
+        # Iterate through all files in GridFS
+            for grid_out in fs.find():
+                file_id = grid_out._id  # Get the file's ID
+                binary_data = grid_out.read()  # Read the entire binary content of the file
+
+                audio_files_data.append({
+                    'id': file_id,
+                    'binary_data': binary_data
+                })
+
+            return audio_files_data
+        except Exception as e:
+            self.logger.error("The audio_file was not successfully uploaded to mongodb.",e)
+
+
+
+
 
 
