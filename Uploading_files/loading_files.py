@@ -13,7 +13,7 @@ import json
 class loading_files:
     def __init__(self):
         load_dotenv(find_dotenv())
-        self.path = pathlib.Path(os.getenv('PODCASTS_PATH'))
+        self.path = pathlib.Path(r"C:\Users\oriel\podcasts")
         self.data_dic = {}
         self.data_in_json = None
         self.producer_metadata = Producer()
@@ -45,11 +45,9 @@ class loading_files:
                     self.logger.error("An error occured while publishing the file.",e)
 
 
-        try:
-            self.producer_metadata.get_producer_config().flush()
-            self.logger.debug("The all files was successfully published.")
-        except Exception as e:
-            self.logger.error("An error occured while getting the producer config.",e)
+
+        self.producer_metadata.get_producer_config().flush()
+
 
 
 

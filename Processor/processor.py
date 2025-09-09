@@ -19,7 +19,7 @@ class processor:
         self.stt = STT()
         self.logger = Logger.get_logger()
         self.topic_data = None
-        # self.mongo = MongoDal()
+        self.mongo = MongoDal()
         self.list_path =[]
         self.list_id = []
         # self.s = Search(using=self.es, index=self.index_name)
@@ -31,26 +31,27 @@ class processor:
         except Exception as e:
             self.logger.error("An error occured while getting the file.",e)
 
-        try:
-            for event in self.topic_data:
-                message = self.consumer.convert_to_dct_of_topic_and_value(event)
-                path_and_metadata = self.cleaner.string_to_dict(message["value"])
-                unique_id = self.hasher.generate_file_hash(path_and_metadata["path"])
 
-                # path_and_metadata["metadata"]["unique_id"] = unique_id
-                # path_and_metadata["metadata"]["STT_file"] = "Null"
+        for event in self.topic_data:
+            self.logger.info("level0")
+            message = self.consumer.convert_to_dct_of_topic_and_value(event)
+            path_and_metadata = self.cleaner.string_to_dict(message["value"])
+            unique_id = self.hasher.generate_file_hash(path_and_metadata["path"])
+            self.logger.info("level1")
+            path_and_metadata["metadata"]["unique_id"] = unique_id
+            path_and_metadata["metadata"]["STT_file"] = "Null"
 
-                path_and_metadata["metadata"]["STT_file"] = self.stt.audio_from_path(path_and_metadata["path"])
+            path_and_metadata["metadata"]["STT_file"] = self.stt.audio_from_path(path_and_metadata["path"])
 
 
-                self.es.input_to_index(path_and_metadata["metadata"],self.index_name,unique_id)
+            self.es.input_to_index(path_and_metadata["metadata"],self.index_name,unique_id)
+            self.logger.info("level4")
 
-                self.list_path.append(path_and_metadata["path"])
-                self.list_id.append(unique_id)
+            self.list_path.append(path_and_metadata["path"])
+            self.list_id.append(unique_id)
 
-                # self.mongo.insert_audio(path_and_metadata["path"], unique_id)
-        except IndexError:
-            self.logger.warning("IndexError: Cannot access elements from an empty topic_data list.")
+            self.mongo.insert_audio(path_and_metadata["path"], unique_id)
+
 
         # self.list_id = self.es.search_id(self.index_name)
 

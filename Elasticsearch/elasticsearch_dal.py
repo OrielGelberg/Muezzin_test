@@ -48,9 +48,11 @@ class ElasticsearchDal:
 
 
     def input_to_index(self, single_dict_document, index,unique_id):
+        self.logger.info("input_to_index level2")
         try:
             response = self.es.index(index=index,id = unique_id,document=single_dict_document)
-            self.logger.debug("Inserted document:",response)
+            self.logger.info("input_to_index level3")
+            self.logger.info("Inserted document")
 
         except Exception as e:
             self.logger.error("Failed to insert document:",e)
