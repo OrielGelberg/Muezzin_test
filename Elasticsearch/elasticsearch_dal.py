@@ -69,12 +69,66 @@ class ElasticsearchDal:
                     "STT_file": text,
                 })
             self.logger.info("Document updated successfully in elasticsearch")
+        except Exception as e:
+            print(f"Error updating document: {e}")
 
+    def update_bds_search_index(self, index,unique_id,total_hostile_precent,is_bds,bds_level):
+        print("chek")
+        self.logger.info("Try Update index ")
+        try:
 
+            self.logger.info("have Update index")
+            response = self.es.update(index=index, id=unique_id, doc= {
+                    "total_hostile_precent": total_hostile_precent,
+                    "is_bds":is_bds,
+                    "bds_level": bds_level
+                })
+            self.logger.info("Document updated successfully in elasticsearch")
         except Exception as e:
             print(f"Error updating document: {e}")
 
 
 
+
+
+
+
+
+
+    def serch_and_processor_index(self, index_name):
+        self.logger.info("Search all index")
+        response_list = []
+        try:
+            scroll_timeout = "2m"
+            response = self.es.search(
+                index=index_name,
+                scroll=scroll_timeout,
+                size=1000,  # Number of documents to retrieve per scroll request
+                query={"match_all": {}}  # Query to match all documents
+            )
+
+            self.logger.info("Search all index play")
+            scroll_id = response['_scroll_id']
+            documents = response['hits']['hits']
+
+            while len(documents) > 0:
+                for doc in documents:
+                    doc_id = doc['_id']
+                    source = doc['_source']
+                    self.logger.info("Receive a text field")
+                    text_field_value = source.get("STT_file")
+
+                    response_dic = {"id": doc_id, "text": text_field_value}
+                    response_list.append(response_dic)
+
+                response = self.es.scroll(scroll_id=scroll_id, scroll=scroll_timeout)
+                scroll_id = response['_scroll_id']
+                documents = response['hits']['hits']
+
+            self.es.clear_scroll(scroll_id=scroll_id)
+            return response_list
+
+        except Exception as e:
+            self.logger.error("Failed to search all index")
 
 
