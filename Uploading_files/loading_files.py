@@ -22,7 +22,7 @@ class loading_files:
 
 
 
-    def loading_file(self):
+    def run(self):
         for item in self.path.rglob("*.wav"):
             if item.is_file():
                 file_stats = item.stat()

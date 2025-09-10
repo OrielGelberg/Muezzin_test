@@ -43,8 +43,3 @@ class Logger:
 
 
 
-# if __name__ == '__main__':
-#
-#     logger = Logger.get_logger()
-#     logger.info("The muazin started")
-#     logger.error("ooooopsss data invalid")

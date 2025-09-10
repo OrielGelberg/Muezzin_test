@@ -1,10 +1,11 @@
 from loading_files import loading_files
 import time
 
-run = loading_files()
+
+class maneger_loading():
+    def __init__(self):
+        self.loading_files = loading_files()
+        self.loading_files.run()
+        time.sleep(60)
 
 
-if __name__ == '__main__':
-
-     run.loading_file()
-     time.sleep(100000)
