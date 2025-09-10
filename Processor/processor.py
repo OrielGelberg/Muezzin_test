@@ -40,6 +40,7 @@ class processor:
             self.logger.info("level1")
             # path_and_metadata["metadata"]["unique_id"] = unique_id
             path_and_metadata["metadata"]["STT_file"] = "Null"
+            print(path_and_metadata)
 
             # path_and_metadata["metadata"]["STT_file"] = self.stt.audio_from_path(path_and_metadata["path"])
 
@@ -55,7 +56,8 @@ class processor:
         list_dict_audio = self.mongo.get_all_audio_files()
         self.logger.info("input to list_dict_audio was succesful.")
         for audio_file in list_dict_audio:
-            self.es.update_audio_search_index(audio_file[self.index_name],audio_file['_id'],audio_file['binary_data'])
+            clear_text = self.stt.audio_from_binari_data(audio_file['binary_data'])
+            self.es.update_audio_search_index(self.index_name,audio_file['id'],clear_text)
 
 
 

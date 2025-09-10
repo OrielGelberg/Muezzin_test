@@ -30,8 +30,6 @@ class loading_files:
                     "title": str(item.name),
                     "Size": str(file_stats.st_size),
                     "Created": str(datetime.datetime.fromtimestamp(file_stats.st_ctime)),
-                    # "inode": str(file_stats.st_ino),
-                    # "dev": str(file_stats.st_dev),
                 }
                 self.data_dic["path"] = str(item)
                 self.data_dic["metadata"] = metadata_dic

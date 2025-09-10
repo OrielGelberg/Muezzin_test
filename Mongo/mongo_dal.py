@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import gridfs
 from dotenv import find_dotenv, load_dotenv
 import os
+import time
 
 
 
@@ -41,14 +42,14 @@ class MongoDal:
     def insert_audio(self, path,unique_id):
 
         connection = self.open_connection()
-        try:
-            db = connection[self.MongodbDB]
-            fs = gridfs.GridFS(db)
-            with open(path, "rb") as f:
-                fs.put(f, _id=unique_id)
-            self.logger.debug('Audio inserted successfully to mongodb')
-        except Exception as e:
-            self.logger.error("The audio_file was not successfully uploaded to mongodb.",e)
+
+
+        db = connection[self.MongodbDB]
+        fs = gridfs.GridFS(db)
+        with open(path, "rb") as f:
+            fs.put(f, _id=unique_id)
+        self.logger.info('Audio inserted successfully to mongodb')
+
 
 
 

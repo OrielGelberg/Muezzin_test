@@ -70,20 +70,23 @@ class ElasticsearchDal:
     #     return document_ids
 
     def update_audio_search_index(self, index,unique_id,text):
-        if self.es.indices.exists(index=index):
-            try:
-                update_data = {
-                    "doc": {
-                        "STT_file": text,
-                    }
-                }
-                self.logger.info("have Update index")
-                response = self.es.update(index=index, id=unique_id, body=update_data)
-                self.logger.info("Document updated successfully in elasticsearch")
-                print(f"Document updated successfully: {response['result']}")
+        print("chek")
+        self.logger.info("Try Update index ")
+        try:
+            # update_data = {
+            #     "doc": {
+            #         "STT_file": text,
+            #     }
+            # }
+            self.logger.info("have Update index")
+            response = self.es.update(index=index, id=unique_id, doc= {
+                    "STT_file": text,
+                })
+            self.logger.info("Document updated successfully in elasticsearch")
 
-            except Exception as e:
-                print(f"Error updating document: {e}")
+
+        except Exception as e:
+            print(f"Error updating document: {e}")
 
 
 

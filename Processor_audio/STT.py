@@ -37,7 +37,8 @@ class STT:
             audio_data = r.record(source)  # Read the entire audio file
         try:
             text = r.recognize_google(audio_data)  # Using Google Speech Recognition
-            print("Transcription: " + text)
+            return text
+            # print("Transcription: " + text)
         except sr.UnknownValueError:
             print("Could not understand audio")
         except sr.RequestError as e:
