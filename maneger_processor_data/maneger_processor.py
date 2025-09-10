@@ -14,3 +14,5 @@ class maneger_processor():
         self.understanding_text.run()
 
 
+if __name__ == "__main__":
+    maneger_processor = maneger_processor()
