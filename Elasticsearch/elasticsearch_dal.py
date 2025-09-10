@@ -3,7 +3,7 @@ from elasticsearch import Elasticsearch
 from dotenv import find_dotenv, load_dotenv
 import os
 from datetime import datetime
-# from elasticsearch_dsl import Search
+
 
 
 class ElasticsearchDal:
@@ -32,9 +32,6 @@ class ElasticsearchDal:
                     "Size": {"type": "integer"},
                     "Created": {"type": "datetime"},
                     "STT_file":{"type": "text"},
-                    # "inode": {"type": "keyword"},
-                    # "dev": {"type": "keyword"},
-                    # "unique_id": {"type": "keyword"},
                 }
             }
         }
@@ -57,17 +54,6 @@ class ElasticsearchDal:
         except Exception as e:
             self.logger.error("Failed to insert document:",e)
 
-
-    # def search_id(self,index_name):
-    #     # Create a Search object
-    #     s = Search(using=self.es, index=index_name)
-    #
-    #     s = s.source(False).stored_fields(['_id'])
-    #
-    #     # Retrieve all document IDs and store them in an array
-    #     document_ids = [hit.meta.id for hit in s.scan()]
-    #
-    #     return document_ids
 
     def update_audio_search_index(self, index,unique_id,text):
         print("chek")
